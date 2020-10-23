@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" type="text/css" href="index-style.css">
+
+	<title>END</title>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+	<script type="text/javascript">
+		$.getJSON('https://cors-anywhere.herokuapp.com/https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions?', function(data) {
+
+			document.getElementById("card-container-currently").innerHTML = "";
+			document.getElementById("card-container-coming").innerHTML = "";
+			document.getElementById("lil-stats-container").innerHTML = "";
+			document.getElementById("tableau-support").innerHTML = "";
+
+			sessionStorage.setItem('numberOfGames', 0);
+			sessionStorage.setItem('numberOfDollars', 0);
+
+			for (i = 0; i < data.data.Catalog.searchStore.elements.length; i++) {
+				if (data.data.Catalog.searchStore.elements[i].price.totalPrice.discountPrice == 0) {
+
+					var oldNumber = parseFloat(sessionStorage.getItem('numberOfGames'));
+					sessionStorage.setItem('numberOfGames', (oldNumber+1));
+					oldNumber = parseFloat(sessionStorage.getItem('numberOfDollars'));
+					sessionStorage.setItem('numberOfDollars', (oldNumber+(data.data.Catalog.searchStore.elements[i].price.totalPrice.originalPrice/100)));
+					console.log(oldNumber+(data.data.Catalog.searchStore.elements[i].price.totalPrice.originalPrice/100));
+
+					for (j = 0; j < data.data.Catalog.searchStore.elements[i].keyImages.length; j++) {
+						if (data.data.Catalog.searchStore.elements[i].keyImages[j].type == "Thumbnail") {
+							var thumbnail = j;
+						} 
+					}
+					var originalPrice = (data.data.Catalog.searchStore.elements[i].price.totalPrice.originalPrice / 100);
+
+					$('#tableau-lignes').append("<tr> <td>"+data.data.Catalog.searchStore.elements[i].title+"</td> <td>"+data.data.Catalog.searchStore.elements[i].customAttributes[2].value+"</td> <td>"+data.data.Catalog.searchStore.elements[i].customAttributes[1].value+"</td> <td>$"+originalPrice+"</td> </tr>");
+					
+					console.log(data.data.Catalog.searchStore.elements[i].productSlug);
+					$('#card-container-currently').append("<div class='card' onclick='openStorePage(`"+data.data.Catalog.searchStore.elements[i].productSlug+"`)'><img class='thumbnail' src='"+data.data.Catalog.searchStore.elements[i].keyImages[thumbnail].url+"'><div class='card-text'><span style='font-size: 20px;'>"+data.data.Catalog.searchStore.elements[i].title+"</span><br><span><span style='color: #b3b3b3ff; text-decoration: line-through;'>$"+originalPrice+"</span>  $00</span><br><span>Developer: <span style='color: #b3b3b3ff;'>"+data.data.Catalog.searchStore.elements[i].customAttributes[2].value+"</span></span><br><span>Publisher: <span style='color: #b3b3b3ff;'>"+data.data.Catalog.searchStore.elements[i].customAttributes[1].value+"</span></span></div></div>");
+				} else {
+					for (j = 0; j < data.data.Catalog.searchStore.elements[i].keyImages.length; j++) {
+						if (data.data.Catalog.searchStore.elements[i].keyImages[j].type == "Thumbnail") {
+							var thumbnail = j;
+						} 
+					}
+					var originalPrice = (data.data.Catalog.searchStore.elements[i].price.totalPrice.originalPrice / 100);
+					
+					if (data.data.Catalog.searchStore.elements[i].customAttributes[2].key != "developerName") {
+						data.data.Catalog.searchStore.elements[i].customAttributes[2].value = data.data.Catalog.searchStore.elements[i].customAttributes[1].value
+					}
+
+					$('#card-container-coming').append("<div class='card'><img class='thumbnail' src='"+data.data.Catalog.searchStore.elements[i].keyImages[thumbnail].url+"'><div class='card-text'><span style='font-size: 20px;'>"+data.data.Catalog.searchStore.elements[i].title+"</span><br><span><span style='color: #b3b3b3ff; text-decoration: line-through;'>$"+originalPrice+"</span>  $00</span><br><span>Developer: <span style='color: #b3b3b3ff;'>"+data.data.Catalog.searchStore.elements[i].customAttributes[2].value+"</span></span><br><span>Publisher: <span style='color: #b3b3b3ff;'>"+data.data.Catalog.searchStore.elements[i].customAttributes[1].value+"</span></span></div></div>");
+				}
+			}
+
+			$.getJSON('https://alwaysmoreflowers.github.io/amf/endliste.json', function(data) {
+
+				var nbrOfDollars = sessionStorage.getItem('numberOfDollars');
+				for (i = 0; i < data.length; i++) {
+					if (!isNaN(data[i].price)) {
+						nbrOfDollars=parseFloat(nbrOfDollars)+parseFloat((data[i].price/100));
+					}
+				}
+				$('#lil-stats-container').append("<div class='card-stats'><p>Dollars saved (only with games):</p><p><b>$"+nbrOfDollars+"</b></p></div>");
+
+				var nbrOfGame = (parseInt(sessionStorage.getItem('numberOfGames'))+data.length);
+				$('#lil-stats-container').append("<div class='card-stats'><p>Number of games given for free:</p><p><b>"+nbrOfGame+"</b></p></div>");
+
+				for (i = (data.length-1); i >= 0; i--) {
+					$('#tableau-lignes').append("<tr> <td>"+data[i].title+"</td> <td>"+data[i].developer+"</td> <td>"+data[i].publisher+"</td> <td>$"+(data[i].price/100)+"</td> </tr>");
+				}
+  			});
+  		});
+
+		function openStorePage(link) {
+			console.log("https://www.epicgames.com/store/en/product/"+link);
+			window.location.href = "https://www.epicgames.com/store/en/product/"+link;
+		}
+		  
+	</script>
+</head>
+
+<body>
+	<div id="header">
+		Epic New Deal
+	</div>
+
+	<div id="current-free">
+
+	</div>
+	
+	<div id="currently-free">
+		<img class="deco" src="imgs/deco.png">
+		<br>
+		<div id="subtitle-text">Currently free</div>
+		<img class="deco" src="imgs/deco.png">
+	</div>
+
+	<div id="card-container-currently">
+		<p style='font-size: 25px; font-family: BrutalRegular; color: #041b23ff'>Loading content...</p>
+	</div>
+
+	<div id="currently-free">
+		<img class="deco" src="imgs/deco.png">
+		<br>
+		<div id="subtitle-text">Coming Soon</div>
+		<img class="deco" src="imgs/deco.png">
+	</div>
+
+	<div id="card-container-coming">
+		<p style='font-size: 25px; font-family: BrutalRegular; color: #041b23ff'>Loading content...</p>
+	</div>
+
+	<div id="currently-free">
+		<img class="deco" src="imgs/deco.png">
+		<br>
+		<div id="subtitle-text">Li'l Stats</div>
+		<img class="deco" src="imgs/deco.png">
+	</div>
+
+	<div id="lil-stats-container">
+		<p style='font-size: 25px; font-family: BrutalRegular; color: #041b23ff'>Loading content...</p>
+	</div>
+
+	<div id="currently-free">
+		<img class="deco" src="imgs/deco.png">
+		<br>
+		<div id="subtitle-text">Past Games</div>
+		<img class="deco" src="imgs/deco.png">
+	</div>
+
+	<div id="tableau-main">
+		<table class="content-table">
+			<thead>
+			<tr>
+				<th>Title</th>
+				<th>Developer</th>
+				<th>Publisher</th>
+				<th>Original price</th>
+			</tr>
+			</thead>
+			<tbody id="tableau-lignes">
+			</tbody>
+		</table>
+	</div>
+	<div id="tableau-support">
+		<p style='text-align: center; font-size: 25px; font-family: BrutalRegular; color: #041b23ff'>Loading content...</p>
+	</div>
+</body>
+
+</html>
