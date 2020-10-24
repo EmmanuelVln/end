@@ -17,8 +17,8 @@
 
 			document.getElementById("card-container-currently").innerHTML = "";
 			document.getElementById("card-container-coming").innerHTML = "";
-			document.getElementById("lil-stats-container").innerHTML = "";
-			document.getElementById("tableau-support").innerHTML = "";
+/* 			document.getElementById("lil-stats-container").innerHTML = "";
+			document.getElementById("tableau-support").innerHTML = ""; */
 
 			sessionStorage.setItem('numberOfGames', 0);
 			sessionStorage.setItem('numberOfDollars', 0);
@@ -39,8 +39,8 @@
 					}
 					var originalPrice = (data.data.Catalog.searchStore.elements[i].price.totalPrice.originalPrice / 100);
 
-					$('#tableau-lignes').append("<tr> <td>"+data.data.Catalog.searchStore.elements[i].title+"</td> <td>"+data.data.Catalog.searchStore.elements[i].customAttributes[2].value+"</td> <td>"+data.data.Catalog.searchStore.elements[i].customAttributes[1].value+"</td> <td>$"+originalPrice+"</td> </tr>");
-					
+/* 					$('#tableau-lignes').append("<tr> <td>"+data.data.Catalog.searchStore.elements[i].title+"</td> <td>"+data.data.Catalog.searchStore.elements[i].customAttributes[2].value+"</td> <td>"+data.data.Catalog.searchStore.elements[i].customAttributes[1].value+"</td> <td>$"+originalPrice+"</td> </tr>");
+ */					
 					console.log(data.data.Catalog.searchStore.elements[i].productSlug);
 					$('#card-container-currently').append("<div class='card' onclick='openStorePage(`"+data.data.Catalog.searchStore.elements[i].productSlug+"`)'><img class='thumbnail' src='"+data.data.Catalog.searchStore.elements[i].keyImages[thumbnail].url+"'><div class='card-text'><span style='font-size: 20px;'>"+data.data.Catalog.searchStore.elements[i].title+"</span><br><span><span style='color: #b3b3b3ff; text-decoration: line-through;'>$"+originalPrice+"</span>  $00</span><br><span>Developer: <span style='color: #b3b3b3ff;'>"+data.data.Catalog.searchStore.elements[i].customAttributes[2].value+"</span></span><br><span>Publisher: <span style='color: #b3b3b3ff;'>"+data.data.Catalog.searchStore.elements[i].customAttributes[1].value+"</span></span></div></div>");
 				} else {
@@ -59,7 +59,7 @@
 				}
 			}
 
-			$.getJSON('https://alwaysmoreflowers.github.io/amf/endliste.json', function(data) {
+/* 			$.getJSON('https://alwaysmoreflowers.github.io/amf/endliste.json', function(data) {
 
 				var nbrOfDollars = sessionStorage.getItem('numberOfDollars');
 				for (i = 0; i < data.length; i++) {
@@ -75,12 +75,11 @@
 				for (i = (data.length-1); i >= 0; i--) {
 					$('#tableau-lignes').append("<tr> <td>"+data[i].title+"</td> <td>"+data[i].developer+"</td> <td>"+data[i].publisher+"</td> <td>$"+(data[i].price/100)+"</td> </tr>");
 				}
-  			});
+  			}); */
   		});
 
 		function openStorePage(link) {
-			console.log("https://www.epicgames.com/store/en/product/"+link);
-			window.location.href = "https://www.epicgames.com/store/en/product/"+link;
+			window.open("https://www.epicgames.com/store/en/product/"+link, '_blank');
 		}
 		  
 	</script>
@@ -117,7 +116,7 @@
 		<p style='font-size: 25px; font-family: BrutalRegular; color: #041b23ff'>Loading content...</p>
 	</div>
 
-	<div id="currently-free">
+<!-- 	<div id="currently-free">
 		<img class="deco" src="imgs/deco.png">
 		<br>
 		<div id="subtitle-text">Li'l Stats</div>
@@ -151,7 +150,7 @@
 	</div>
 	<div id="tableau-support">
 		<p style='text-align: center; font-size: 25px; font-family: BrutalRegular; color: #041b23ff'>Loading content...</p>
-	</div>
+	</div> -->
 </body>
 
 </html>
