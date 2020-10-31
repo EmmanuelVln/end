@@ -24,7 +24,7 @@
 			sessionStorage.setItem('numberOfDollars', 0);
 
 			for (i = 0; i < data.data.Catalog.searchStore.elements.length; i++) {
-				if (data.data.Catalog.searchStore.elements[i].price.totalPrice.discountPrice == 0) {
+				if (data.data.Catalog.searchStore.elements[i].price.lineOffers[0].appliedRules[0]) {
 
 					var oldNumber = parseFloat(sessionStorage.getItem('numberOfGames'));
 					sessionStorage.setItem('numberOfGames', (oldNumber+1));
@@ -55,7 +55,11 @@
 						data.data.Catalog.searchStore.elements[i].customAttributes[2].value = data.data.Catalog.searchStore.elements[i].customAttributes[1].value
 					}
 
-					$('#card-container-coming').append("<div class='card' onclick='openStorePage(`"+data.data.Catalog.searchStore.elements[i].productSlug+"`)'><img class='thumbnail' src='"+data.data.Catalog.searchStore.elements[i].keyImages[thumbnail].url+"'><div class='card-text'><span style='font-size: 20px;'>"+data.data.Catalog.searchStore.elements[i].title+"</span><br><span>$"+originalPrice+"</span><br><span>Developer: <span style='color: #b3b3b3ff;'>"+data.data.Catalog.searchStore.elements[i].customAttributes[2].value+"</span></span><br><span>Publisher: <span style='color: #b3b3b3ff;'>"+data.data.Catalog.searchStore.elements[i].customAttributes[1].value+"</span></span></div></div>");
+					if (data.data.Catalog.searchStore.elements[i].price.totalPrice.originalPrice == 0) {
+						$('#card-container-coming').append("<div class='card' onclick='openStorePage(`"+data.data.Catalog.searchStore.elements[i].productSlug+"`)'><img class='thumbnail' src='"+data.data.Catalog.searchStore.elements[i].keyImages[thumbnail].url+"'><div class='card-text'><span style='font-size: 20px;'>"+data.data.Catalog.searchStore.elements[i].title+"</span><br><span>Unknown original price</span><br><span>Developer: <span style='color: #b3b3b3ff;'>"+data.data.Catalog.searchStore.elements[i].customAttributes[2].value+"</span></span><br><span>Publisher: <span style='color: #b3b3b3ff;'>"+data.data.Catalog.searchStore.elements[i].customAttributes[1].value+"</span></span></div></div>");
+					} else {
+						$('#card-container-coming').append("<div class='card' onclick='openStorePage(`"+data.data.Catalog.searchStore.elements[i].productSlug+"`)'><img class='thumbnail' src='"+data.data.Catalog.searchStore.elements[i].keyImages[thumbnail].url+"'><div class='card-text'><span style='font-size: 20px;'>"+data.data.Catalog.searchStore.elements[i].title+"</span><br><span>$"+originalPrice+"</span><br><span>Developer: <span style='color: #b3b3b3ff;'>"+data.data.Catalog.searchStore.elements[i].customAttributes[2].value+"</span></span><br><span>Publisher: <span style='color: #b3b3b3ff;'>"+data.data.Catalog.searchStore.elements[i].customAttributes[1].value+"</span></span></div></div>");
+					}
 				}
 			}
 
