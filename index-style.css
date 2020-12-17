@@ -93,6 +93,10 @@ body {
     height: 350px;
 }
 
+.thumbnaillarge {
+    width: 265px;
+}
+
 #tableau-main {
 	margin-top: 35px;
     display: block;
